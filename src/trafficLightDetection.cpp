@@ -4,9 +4,9 @@ using namespace std;
 using namespace cv;
 
 #define DEBUG_CAMERA 0
-#define DEBUG_VIDEO 1
+#define DEBUG_VIDEO 0
 #define DEBUG_IMAGE 0
-#define DEBUG_IMAGES 0
+#define DEBUG_IMAGES 1
 
 int main(int argc, char** argv){
 	FrameLoad frameLoad;
@@ -23,14 +23,22 @@ int main(int argc, char** argv){
 		frameLoad.multiImageLoad("../../ImgData/%01d.png");
 	}
 
-	nFrame = getFrameCount();
+	long nFrame = frameLoad.getFrameCount();
 	Mat frame;
 	while(nFrame){
 		if(nFrame != INF){
 			nFrame --;
 		}
 		frame = frameLoad.getFrame();
-		showFrame("Frame", frame);
-		show();
+		frameLoad.showFrame("Frame", frame);
+		if(DEBUG_IMAGE){
+			frameLoad.show(0);
+		}
+		else if(DEBUG_VIDEO){
+			frameLoad.show(20);
+		}
+		else if(DEBUG_IMAGES){
+			frameLoad.show(200);
+		}
 	}
 }

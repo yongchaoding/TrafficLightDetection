@@ -3,15 +3,11 @@
 using namespace std;
 using namespace cv;
 
-FrameLoad(){
-	LoadMode loadMode;
-}
-
-void CameraLoad(int CameraDev){
+void FrameLoad::CameraLoad(int CameraDev){
 	loadMode = CAMERA;
 	capture.open(0);
 	if(!capture.isOpened()){
-		perror("CAMERA:%d open error", CameraDev);
+		perror("CAMERA open error");
 		exit(-1);
 	}
 }
@@ -20,7 +16,7 @@ void FrameLoad::videoLoad(std::string VideoFile){
 	loadMode = VIDEO;
 	capture.open(VideoFile.c_str());
 	if(!capture.isOpened()){
-		perror("%s open error", VideoFile.c_str());
+		perror("VIDEO open error");
 		exit(-1);
 	}
 }
@@ -35,7 +31,7 @@ void FrameLoad::multiImageLoad(std::string ImagesPath){
 	// ImagesPath: img_%02d.jpg
 	capture.open(ImagesPath.c_str());
 	if(!capture.isOpened()){
-		perror("%s open error", VideoFile.c_str());
+		perror("Images open error");
 		exit(-1);
 	}
 }
@@ -43,18 +39,19 @@ void FrameLoad::multiImageLoad(std::string ImagesPath){
 
 long FrameLoad::getFrameCount(){
 	long nFrame;
-	switch loadMode{
+	switch (loadMode)
+	{
 		case CAMERA:
 			nFrame = INF;
 			break;
 		case VIDEO:
-			nFrame = long nFrame=static_cast<long>(capture.get(CV_CAP_PROP_FRAME_COUNT));
+			nFrame = static_cast<long>(capture.get(CV_CAP_PROP_FRAME_COUNT));
 			break;
 		case IMAGE:
 			nFrame = 1;
 			break;
 		case IMAGES:
-			nFrame = long nFrame=static_cast<long>(capture.get(CV_CAP_PROP_FRAME_COUNT));
+			nFrame = static_cast<long>(capture.get(CV_CAP_PROP_FRAME_COUNT));
 			//nFrame = ImagesNum;
 			break;
 		default:
@@ -66,7 +63,7 @@ long FrameLoad::getFrameCount(){
 
 Mat FrameLoad::getFrame(){
 	Mat frame;
-	if(loadMode == CAMREA){
+	if(loadMode == CAMERA){
 
 	}
 	else if(loadMode == VIDEO){
@@ -84,11 +81,11 @@ Mat FrameLoad::getFrame(){
 	return frame;
 }
 
-void FrameLoad::showFrame(str::string WinName, Mat Frame){
+void FrameLoad::showFrame(std::string WinName, Mat Frame){
 	namedWindow(WinName.c_str(), CV_WINDOW_AUTOSIZE);
 	imshow(WinName.c_str(), Frame);
 }
 
-void FrameLoad::show(){
-	waitKey(10);
+void FrameLoad::show(int time){
+	waitKey(time);
 }

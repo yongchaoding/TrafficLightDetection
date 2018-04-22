@@ -3,7 +3,7 @@
 
 #include "iostream"
 #include "limits.h"
-
+#include <stdio.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
@@ -14,9 +14,11 @@ using namespace cv;
 
 #define INF LONG_MAX
 
+enum LoadMode {CAMERA, VIDEO, IMAGE, IMAGES};
+
 class FrameLoad{
 public:
-	FrameLoad();
+	FrameLoad() {}
 	~FrameLoad() {}
 	void CameraLoad(int CameraDev);
 	void videoLoad(std::string VideoFile);
@@ -25,13 +27,13 @@ public:
 	long getFrameCount();
 	Mat getFrame();
 
-	void showFrame(str::string WinName, Mat Frame);
-	void show();
+	void showFrame(std::string WinName, Mat Frame);
+	void show(int time);
 private:
-	enum LoadMode{CAMERA, VIDEO, IMAGE, IMAGES};
+	LoadMode loadMode;
 	VideoCapture capture;
 	int ImagesNum;
 	std::string ImageFile;
-}
+};
 
 #endif
