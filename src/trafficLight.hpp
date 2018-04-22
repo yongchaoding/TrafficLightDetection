@@ -13,8 +13,8 @@
 using namespace std;
 using namespace cv;
 
-#define WIDTH_DRAW 100
-#define HEIGHT_DRAW 100
+#define WIDTH_DRAW 20
+#define HEIGHT_DRAW 20
 
 class TrafficLight{
 public:
@@ -23,7 +23,7 @@ public:
 	void LightDetection(const Mat &originImage, Mat &redImage, Mat &greenImage);
 	void LightDetection(const Mat &originImage, Mat &LightImage);
 	void ClosingOperation(Mat &LightImage);
-	void LightBoundingBox(const Mat &LightImage);
+	vector<Point> LightBoundingBox(const Mat &LightImage);
 	void BoundingBoxShow(const Mat &LightImage, vector<Point> circlePoint);
 	void LightExtract();
 private:

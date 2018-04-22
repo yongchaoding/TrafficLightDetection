@@ -59,8 +59,8 @@ void TrafficLight::LightDetection(const Mat &originImage, Mat &LightImage){
 
 
 void TrafficLight::ClosingOperation(Mat &LightImage){
-	Mat element_erode = getStructuringElement(MORPH_RECT, Size(3, 3));
-	Mat element_dilate = getStructuringElement(MORPH_RECT, Size(3, 3));
+	Mat element_erode = getStructuringElement(MORPH_RECT, Size(1, 1));
+	Mat element_dilate = getStructuringElement(MORPH_RECT, Size(8, 8));
 	erode(LightImage, LightImage, element_erode);
 	dilate(LightImage, LightImage, element_dilate);
 }
@@ -70,7 +70,7 @@ vector<Point> TrafficLight::LightBoundingBox(const Mat &LightImage){
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 	// Finds contours in a binary image. (边缘)
-	findContours(threshold_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	findContours(LightImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 
 	vector<Point> circlePoint(contours.size());
 	vector<vector<Point> > contours_poly(contours.size());
@@ -79,8 +79,8 @@ vector<Point> TrafficLight::LightBoundingBox(const Mat &LightImage){
 		approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
 		// Calculates a contour area.
 		Rect rec = boundingRect(Mat(contours_poly[i]));
-		circlePoint.x = rec.x + rec.width/2;
-		circlePoint.y = rec.y + rec.height/2;
+		circlePoint[i].x = rec.x + rec.width/2;
+		circlePoint[i].y = rec.y + rec.height/2;
 	}
 	return circlePoint;
 }
@@ -90,8 +90,8 @@ void TrafficLight::BoundingBoxShow(const Mat &LightImage, vector<Point> circlePo
 	LightImage.copyTo(ImageShow);
 	
 	for(int i = 0; i < circlePoint.size(); ++i){
-		Point pt1 = Point(circlePoint.x - WIDTH_DRAW/2, circlePoint.y - HEIGHT_DRAW/2);
-		Point pt2 = Point(circlePoint.x + WIDTH_DRAW/2, circlePoint.y + HEIGHT_DRAW/2);
+		Point pt1 = Point(circlePoint[i].x - WIDTH_DRAW/2, circlePoint[i].y - HEIGHT_DRAW/2);
+		Point pt2 = Point(circlePoint[i].x + WIDTH_DRAW/2, circlePoint[i].y + HEIGHT_DRAW/2);
 		rectangle(ImageShow, pt1, pt2, Scalar(255,255,255), 4); 
 	}
 

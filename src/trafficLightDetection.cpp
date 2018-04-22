@@ -59,8 +59,8 @@ int main(int argc, char** argv){
 		
 		trafficlight.ClosingOperation(lightImage);
 		vector<Point> pointLight;
-		pointLight = LightBoundingBox(lightImage);
-		BoundingBoxShow(lightImage, pointLight);
+		pointLight = trafficlight.LightBoundingBox(lightImage);
+		trafficlight.BoundingBoxShow(Image, pointLight);
 
 		//frameLoad.showFrame("redImage", redImage);
 		//frameLoad.showFrame("greenImage", greenImage);
