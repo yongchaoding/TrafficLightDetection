@@ -100,6 +100,16 @@ void TrafficLight::BoundingBoxShow(const Mat &LightImage, vector<Point> circlePo
 	waitKey(50);
 }
 
-void TrafficLight::LightExtract(){
-
+void TrafficLight::LightExtract(const Mat &LightImage, vector<Point> circlePoint, int frameNum){
+	LightImage.copyTo(Image);
+	for(int i = 0; i < circlePoint.size(); ++i){
+		//Point pt1 = Point(circlePoint[i].x - WIDTH_DRAW/2, circlePoint[i].y - HEIGHT_DRAW/2);
+		//Point pt2 = Point(circlePoint[i].x + WIDTH_DRAW/2, circlePoint[i].y + HEIGHT_DRAW/2);
+		Rect Rec = Rect(circlePoint[i].x - WIDTH_DRAW/2, circlePoint[i].y - HEIGHT_DRAW/2, WIDTH_DRAW, HEIGHT_DRAW);
+		Mat Roi = Image(Rec);
+		char savepath[128] = "../../ROI/";
+		sprintf(savepath, 128, "%s%d_%d.jpg", savepath, frameNum, i);
+		printf("SavePath is %s\n", savepath);
+		//imwrite(savepath, Roi);
+	}
 }

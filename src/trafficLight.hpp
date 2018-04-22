@@ -25,7 +25,7 @@ public:
 	void ClosingOperation(Mat &LightImage);
 	vector<Point> LightBoundingBox(const Mat &LightImage);
 	void BoundingBoxShow(const Mat &LightImage, vector<Point> circlePoint);
-	void LightExtract();
+	void LightExtract(const Mat &LightImage, vector<Point> circlePoint, int frameNum);
 private:
 	const int thresh_red_min = 145;
 	const int thresh_red_max = 256;
