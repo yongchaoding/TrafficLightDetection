@@ -26,7 +26,9 @@ int main(int argc, char** argv){
 	nFrame = getFrameCount();
 	Mat frame;
 	while(nFrame){
-		nFrame --;
+		if(nFrame != INF){
+			nFrame --;
+		}
 		frame = frameLoad.getFrame();
 		showFrame("Frame", frame);
 		show();
