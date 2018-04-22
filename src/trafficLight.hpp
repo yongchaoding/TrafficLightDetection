@@ -13,13 +13,18 @@
 using namespace std;
 using namespace cv;
 
+#define WIDTH_DRAW 100
+#define HEIGHT_DRAW 100
+
 class TrafficLight{
 public:
 	TrafficLight() {}
 	~TrafficLight() {}
-	void LightDetection(Mat originImage, Mat &redImage, Mat &greenImage);
-	void LightDetection(Mat originImage, Mat &LightImage);
-	void LightBoundingBox();
+	void LightDetection(const Mat &originImage, Mat &redImage, Mat &greenImage);
+	void LightDetection(const Mat &originImage, Mat &LightImage);
+	void ClosingOperation(Mat &LightImage);
+	void LightBoundingBox(const Mat &LightImage);
+	void BoundingBoxShow(const Mat &LightImage, vector<Point> circlePoint);
 	void LightExtract();
 private:
 	const int thresh_red_min = 145;

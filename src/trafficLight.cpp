@@ -1,7 +1,7 @@
 #include "trafficLight.hpp"
 
 
-void TrafficLight::LightDetection(Mat originImage, Mat &redImage, Mat &greenImage){
+void TrafficLight::LightDetection(const Mat &originImage, Mat &redImage, Mat &greenImage){
 	Mat imgYCrCb;
 	// Convert to YCrCb color space
 	cvtColor(originImage, imgYCrCb, CV_BGR2YCrCb);
@@ -36,7 +36,7 @@ void TrafficLight::LightDetection(Mat originImage, Mat &redImage, Mat &greenImag
 }
 
 
-void TrafficLight::LightDetection(Mat originImage, Mat &LightImage){
+void TrafficLight::LightDetection(const Mat &originImage, Mat &LightImage){
 	Mat imgYCrCb;
 	// Convert to YCrCb color space
 	cvtColor(originImage, imgYCrCb, CV_BGR2YCrCb);
@@ -58,8 +58,46 @@ void TrafficLight::LightDetection(Mat originImage, Mat &LightImage){
 }
 
 
-void TrafficLight::LightBoundingBox(){
+void TrafficLight::ClosingOperation(Mat &LightImage){
+	Mat element_erode = getStructuringElement(MORPH_RECT, Size(3, 3));
+	Mat element_dilate = getStructuringElement(MORPH_RECT, Size(3, 3));
+	erode(LightImage, LightImage, element_erode);
+	dilate(LightImage, LightImage, element_dilate);
+}
 
+
+vector<Point> TrafficLight::LightBoundingBox(const Mat &LightImage){
+	vector<vector<Point> > contours;
+	vector<Vec4i> hierarchy;
+	// Finds contours in a binary image. (边缘)
+	findContours(threshold_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+
+	vector<Point> circlePoint(contours.size());
+	vector<vector<Point> > contours_poly(contours.size());
+	for (int i = 0; i < contours.size(); i++){
+		// Approximates a polygonal curve(s) with the specified precision.
+		approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
+		// Calculates a contour area.
+		Rect rec = boundingRect(Mat(contours_poly[i]));
+		circlePoint.x = rec.x + rec.width/2;
+		circlePoint.y = rec.y + rec.height/2;
+	}
+	return circlePoint;
+}
+
+void TrafficLight::BoundingBoxShow(const Mat &LightImage, vector<Point> circlePoint){
+	Mat ImageShow;
+	LightImage.copyTo(ImageShow);
+	
+	for(int i = 0; i < circlePoint.size(); ++i){
+		Point pt1 = Point(circlePoint.x - WIDTH_DRAW/2, circlePoint.y - HEIGHT_DRAW/2);
+		Point pt2 = Point(circlePoint.x + WIDTH_DRAW/2, circlePoint.y + HEIGHT_DRAW/2);
+		rectangle(ImageShow, pt1, pt2, Scalar(255,255,255), 4); 
+	}
+
+	namedWindow("Bounding Box Show", CV_WINDOW_AUTOSIZE);
+	imshow("Bounding Box Show", ImageShow);
+	waitKey(50);
 }
 
 void TrafficLight::LightExtract(){

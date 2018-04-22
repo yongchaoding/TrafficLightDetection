@@ -54,13 +54,18 @@ int main(int argc, char** argv){
 
 		lightImage.create(frame.rows, frame.cols, CV_8UC1);
 
-		trafficlight.LightDetection(Image, redImage, greenImage);
+		//trafficlight.LightDetection(Image, redImage, greenImage);
 		trafficlight.LightDetection(Image, lightImage);
-	
-		frameLoad.showFrame("redImage", redImage);
-		frameLoad.showFrame("greenImage", greenImage);
-		frameLoad.showFrame("lightImage", lightImage);
+		
+		trafficlight.ClosingOperation(lightImage);
+		vector<Point> pointLight;
+		pointLight = LightBoundingBox(lightImage);
+		BoundingBoxShow(lightImage, pointLight);
+
+		//frameLoad.showFrame("redImage", redImage);
+		//frameLoad.showFrame("greenImage", greenImage);
+		//frameLoad.showFrame("lightImage", lightImage);
 			
-		frameLoad.show(20);
+		//frameLoad.show(20);
 	}
 }
