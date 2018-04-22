@@ -1,17 +1,17 @@
 #include "trafficLight.hpp"
 
 
-void trafficLight.LightDetection(Mat originImage, Mat &redImage, Mat &greenImage){
+void TrafficLight::LightDetection(Mat originImage, Mat &redImage, Mat &greenImage){
 	Mat imgYCrCb;
 	// Convert to YCrCb color space
-	cvtColor(img, imgYCrCb, CV_BGR2YCrCb);
+	cvtColor(originImage, imgYCrCb, CV_BGR2YCrCb);
 
 	vector<Mat> planes;
 	split(imgYCrCb, planes);
 	// Traversing to split the color of RED and GREEN according to the Cr component
 	MatIterator_<uchar> it_Cr = planes[1].begin<uchar>(), it_Cr_end = planes[1].end<uchar>();
-	MatIterator_<uchar> it_Red = imgRed.begin<uchar>();
-	MatIterator_<uchar> it_Green = imgGreen.begin<uchar>();
+	MatIterator_<uchar> it_Red = redImage.begin<uchar>();
+	MatIterator_<uchar> it_Green = greenImage.begin<uchar>();
 
 	// Parameters of brightness
 	float gain_red_b = (1 - gain_red_a) * 125;
@@ -36,10 +36,10 @@ void trafficLight.LightDetection(Mat originImage, Mat &redImage, Mat &greenImage
 }
 
 
-void trafficLight.LightDetection(Mat originImage, Mat &LightImage){
+void TrafficLight::LightDetection(Mat originImage, Mat &LightImage){
 	Mat imgYCrCb;
 	// Convert to YCrCb color space
-	cvtColor(img, imgYCrCb, CV_BGR2YCrCb);
+	cvtColor(originImage, imgYCrCb, CV_BGR2YCrCb);
 
 	vector<Mat> planes;
 	split(imgYCrCb, planes);
@@ -58,10 +58,10 @@ void trafficLight.LightDetection(Mat originImage, Mat &LightImage){
 }
 
 
-void trafficLight.LightBoundingBox(){
+void TrafficLight::LightBoundingBox(){
 
 }
 
-void trafficLight.LightExtract(){
+void TrafficLight::LightExtract(){
 
 }

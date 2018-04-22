@@ -30,8 +30,8 @@ private:
 	const float gain_green_a = 0.25;
 	const float gain_red_a = 0.45;
 
-	const int thresh_light_min = 20;
-	const int thresh_light_max = 180;
+	const int thresh_light_min = 80;	// green
+	const int thresh_light_max = 180;	// red
 };
 
 #endif
