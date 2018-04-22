@@ -100,16 +100,22 @@ void TrafficLight::BoundingBoxShow(const Mat &LightImage, vector<Point> circlePo
 	waitKey(50);
 }
 
-void TrafficLight::LightExtract(const Mat &LightImage, vector<Point> circlePoint, int frameNum){
+void TrafficLight::LightExtract(const Mat &LightImage, vector<Point> circlePoint, int* ID){
+	Mat Image;
 	LightImage.copyTo(Image);
+	int row = Image.rows;
+	int col = Image.cols;
 	for(int i = 0; i < circlePoint.size(); ++i){
-		//Point pt1 = Point(circlePoint[i].x - WIDTH_DRAW/2, circlePoint[i].y - HEIGHT_DRAW/2);
-		//Point pt2 = Point(circlePoint[i].x + WIDTH_DRAW/2, circlePoint[i].y + HEIGHT_DRAW/2);
+		if(circlePoint[i].x - WIDTH_DRAW/2 >= 0 && circlePoint[i].y - HEIGHT_DRAW/2 >= 0 && circlePoint[i].x + WIDTH_DRAW/2 < col && circlePoint[i].y + HEIGHT_DRAW/2 < row )
+		{
+		(*ID) ++;
+		printf("ID:%d, circlePoint[%d].x: %d, circlePoint[%d].y: %d\n",*ID, i, circlePoint[i].x, i, circlePoint[i].y);
 		Rect Rec = Rect(circlePoint[i].x - WIDTH_DRAW/2, circlePoint[i].y - HEIGHT_DRAW/2, WIDTH_DRAW, HEIGHT_DRAW);
 		Mat Roi = Image(Rec);
 		char savepath[128] = "../../ROI/";
-		sprintf(savepath, 128, "%s%d_%d.jpg", savepath, frameNum, i);
-		printf("SavePath is %s\n", savepath);
-		//imwrite(savepath, Roi);
+		sprintf(savepath, "%s%08d.jpg", savepath, (*ID));
+		//printf("SavePath is %s\n", savepath);
+		imwrite(savepath, Roi);
+		}
 	}
 }

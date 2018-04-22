@@ -15,6 +15,7 @@ void FrameLoad::CameraLoad(int CameraDev){
 void FrameLoad::videoLoad(std::string VideoFile){
 	loadMode = VIDEO;
 	capture.open(VideoFile.c_str());
+	printf("VideoFile: %s\n", VideoFile.c_str());
 	if(!capture.isOpened()){
 		perror("VIDEO open error");
 		exit(-1);
