@@ -1,5 +1,7 @@
 #include "FrameLoad.hpp"
 #include "trafficLight.hpp"
+#include "time.h"
+#include "stdlib.h"
 using namespace std;
 using namespace cv;
 
@@ -31,7 +33,10 @@ int main(int argc, char** argv){
 	Mat redImage;
 	Mat greenImage;
 	Mat lightImage;
+
+	clock_t start, end;
 	while(nFrame){
+		start = clock();
 		if(nFrame != INF){
 			nFrame --;
 		}
@@ -62,6 +67,10 @@ int main(int argc, char** argv){
 		pointLight = trafficlight.LightBoundingBox(lightImage);
 		trafficlight.BoundingBoxShow(Image, pointLight);
 
+		end = clock();
+		float TimeSpend = (double)(end - start) / CLOCKS_PER_SEC;
+		float frequency = 1/TimeSpend;
+		printf("HZ is %f\n", frequency); 
 		//frameLoad.showFrame("redImage", redImage);
 		//frameLoad.showFrame("greenImage", greenImage);
 		//frameLoad.showFrame("lightImage", lightImage);
