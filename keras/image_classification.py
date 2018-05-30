@@ -63,6 +63,17 @@ def image_load(imagePath):
     print("Read image Using Time: ", endtime - starttime)
     return image_np;
 
+def image_load_from_lcm():
+    global CPP_PYTHON_MSG
+    images = [];
+    for imagefile in CPP_PYTHON_MSG.ImagePath:
+        print(imagefile);
+        image = cv2.imread(imagefile);
+        images.append(image);
+    image_np = np.array(images);
+    return image_np;
+
+
 def model_predict(model, images):
     batch_size = images.shape[0];
     assert batch_size != 0
@@ -81,7 +92,8 @@ def run():
     while True:
         if RECEIVER_FLAG == 1:
             starttime = time.time()
-            image = image_load("Image/");
+            #image = image_load("Image/");
+            image = image_load_from_lcm();
             res = model_predict(model, image);
             endtime = time.time();
             print("Using Total Time: ", endtime - starttime)
