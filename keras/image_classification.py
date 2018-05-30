@@ -7,9 +7,10 @@ import numpy as np
 import cv2
 import time
 import thread
+import lcm
 from keras.models import model_from_yaml
-import msgImagePath
-import msgImageMsg
+from exlcm import msgImagePath
+from exlcm import msgImageMsg
 
 CPP_PYTHON_MSG = [];
 RECEIVER_FLAG = 0;
@@ -74,6 +75,7 @@ def model_predict(model, images):
 
 
 def run():
+    global RECEIVER_FLAG
     LCM = LCM_define();
     model = model_load("model.yaml", "model.weight");
     while True:
