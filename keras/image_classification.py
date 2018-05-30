@@ -5,12 +5,40 @@ import yaml
 import os
 import numpy as np
 import cv2
-import datetime
 import time
+import thread
 from keras.models import model_from_yaml
 import msgImagePath
 import msgImageMsg
 
+CPP_PYTHON_MSG = [];
+RECEIVER_FLAG = 0;
+
+def CPP_PYTHON(channel, data):
+    global CPP_PYTHON_MSG
+    global RECEIVER_FLAG
+    CPP_PYTHON_MSG = msgImagePath.decode(data);
+    RECEIVER_FLAG = 1;
+
+def PYTHON_CPP_PUB(LCM, ImageMsg):
+    Num = len(ImageMsg)
+    msg = msgImageMsg();
+    msg.ImageNum = Num;
+    msg.ImageMsg = ImageMsg;
+    LCM.publish("PYTHON_CPP", msg.encode());
+
+def LCMRUN(LCM):
+    while True:
+        LCM.handle();
+
+def LCM_define():
+    LCM = lcm.LCM();
+    subscription = LCM.subscribe("CPP_PYTHON", CPP_PYTHON)
+    try:
+        thread.start_new_thread(LCMRUN, (LCM, ))
+    except:
+        print("THREAD ERROR!");
+    return LCM
 
 def model_load(model_file, weight):
     f = open(model_file);
@@ -46,17 +74,17 @@ def model_predict(model, images):
 
 
 def run():
+    LCM = LCM_define();
     model = model_load("model.yaml", "model.weight");
-    image = image_load("Image/");
-    starttime = time.time()
-    res = model_predict(model, image);
-    res = model_predict(model, image);
-    res = model_predict(model, image);
-    res = model_predict(model, image);
-    res = model_predict(model, image);
-    endtime = time.time();
-    print(res);
-    print("Using Total Time: ", endtime - starttime)
+    while True:
+        if RECEIVER_FLAG == 1:
+            starttime = time.time()
+            image = image_load("Image/");
+            res = model_predict(model, image);
+            endtime = time.time();
+            print("Using Total Time: ", endtime - starttime)
+            RECEIVER_FLAG = 0;
+            PYTHON_CPP_PUB(LCM, res);
 
 if __name__ == "__main__":
     run();
