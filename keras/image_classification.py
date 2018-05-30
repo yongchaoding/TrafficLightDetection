@@ -76,12 +76,14 @@ def image_load_from_lcm():
 
 def model_predict(model, images):
     batch_size = images.shape[0];
-    assert batch_size != 0
-    starttime = time.time()
-    result = model.predict(images, batch_size=batch_size);
-    endtime = time.time();
-    print("Using Model Time: ", endtime - starttime)
-    res = np.argmax(result, axis=1)
+    #assert batch_size != 0
+    res = [];
+    if batch_size != 0:
+        starttime = time.time()
+        result = model.predict(images, batch_size=batch_size);
+        endtime = time.time();
+        print("Using Model Time: ", endtime - starttime)
+        res = np.argmax(result, axis=1)
     return res;
 
 
@@ -96,6 +98,7 @@ def run():
             image = image_load_from_lcm();
             res = model_predict(model, image);
             endtime = time.time();
+            print("Res: ", res);
             print("Using Total Time: ", endtime - starttime)
             RECEIVER_FLAG = 0;
             PYTHON_CPP_PUB(LCM, res);
