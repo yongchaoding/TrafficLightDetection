@@ -1,0 +1,38 @@
+"backend: !!python/unicode 'tensorflow'\nclass_name: Sequential\nconfig:\n- class_name:\
+  \ Conv2D\n  config:\n    activation: relu\n    activity_regularizer: null\n    batch_input_shape:\
+  \ !!python/tuple [null, 50, 50, 3]\n    bias_constraint: null\n    bias_initializer:\n\
+  \      class_name: VarianceScaling\n      config: {distribution: uniform, mode:\
+  \ fan_avg, scale: 1.0, seed: null}\n    bias_regularizer: null\n    data_format:\
+  \ channels_last\n    dilation_rate: &id001 !!python/tuple [1, 1]\n    dtype: float32\n\
+  \    filters: 32\n    kernel_constraint: null\n    kernel_initializer:\n      class_name:\
+  \ VarianceScaling\n      config: {distribution: uniform, mode: fan_avg, scale: 1.0,\
+  \ seed: null}\n    kernel_regularizer: null\n    kernel_size: !!python/tuple [3,\
+  \ 3]\n    name: conv2d_1\n    padding: valid\n    strides: &id002 !!python/tuple\
+  \ [1, 1]\n    trainable: true\n    use_bias: true\n- class_name: Conv2D\n  config:\n\
+  \    activation: relu\n    activity_regularizer: null\n    bias_constraint: null\n\
+  \    bias_initializer:\n      class_name: VarianceScaling\n      config: {distribution:\
+  \ uniform, mode: fan_avg, scale: 1.0, seed: null}\n    bias_regularizer: null\n\
+  \    data_format: channels_last\n    dilation_rate: *id001\n    filters: 64\n  \
+  \  kernel_constraint: null\n    kernel_initializer:\n      class_name: VarianceScaling\n\
+  \      config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}\n\
+  \    kernel_regularizer: null\n    kernel_size: !!python/tuple [3, 3]\n    name:\
+  \ conv2d_2\n    padding: valid\n    strides: *id002\n    trainable: true\n    use_bias:\
+  \ true\n- class_name: MaxPooling2D\n  config:\n    data_format: channels_last\n\
+  \    name: max_pooling2d_1\n    padding: valid\n    pool_size: &id003 !!python/tuple\
+  \ [2, 2]\n    strides: *id003\n    trainable: true\n- class_name: Dropout\n  config:\
+  \ {name: dropout_1, rate: 0.25, trainable: true}\n- class_name: Flatten\n  config:\
+  \ {name: flatten_1, trainable: true}\n- class_name: Dense\n  config:\n    activation:\
+  \ relu\n    activity_regularizer: null\n    bias_constraint: null\n    bias_initializer:\n\
+  \      class_name: VarianceScaling\n      config: {distribution: uniform, mode:\
+  \ fan_avg, scale: 1.0, seed: null}\n    bias_regularizer: null\n    kernel_constraint:\
+  \ null\n    kernel_initializer:\n      class_name: VarianceScaling\n      config:\
+  \ {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}\n    kernel_regularizer:\
+  \ null\n    name: dense_1\n    trainable: true\n    units: 128\n    use_bias: true\n\
+  - class_name: Dropout\n  config: {name: dropout_2, rate: 0.5, trainable: true}\n\
+  - class_name: Dense\n  config:\n    activation: softmax\n    activity_regularizer:\
+  \ null\n    bias_constraint: null\n    bias_initializer:\n      class_name: VarianceScaling\n\
+  \      config: {distribution: uniform, mode: fan_avg, scale: 1.0, seed: null}\n\
+  \    bias_regularizer: null\n    kernel_constraint: null\n    kernel_initializer:\n\
+  \      class_name: VarianceScaling\n      config: {distribution: uniform, mode:\
+  \ fan_avg, scale: 1.0, seed: null}\n    kernel_regularizer: null\n    name: dense_2\n\
+  \    trainable: true\n    units: 9\n    use_bias: true\nkeras_version: 2.0.0\n"

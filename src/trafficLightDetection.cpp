@@ -1,17 +1,20 @@
 #include "FrameLoad.hpp"
 #include "trafficLight.hpp"
+#include "receiver.hpp"
+
 #include "time.h"
 #include "stdlib.h"
 #include <string.h>
 #include <fstream>
+#include <unistd.h>
 
 using namespace std;
 using namespace cv;
 
 #define DEBUG_CAMERA 0
-#define DEBUG_VIDEO 0
+#define DEBUG_VIDEO 1
 #define DEBUG_IMAGE 0
-#define DEBUG_IMAGES 1
+#define DEBUG_IMAGES 0
 
 int main(int argc, char** argv){
 	FrameLoad frameLoad;
@@ -85,23 +88,25 @@ int main(int argc, char** argv){
 
 		//trafficlight.LightDetection(Image, redImage, greenImage);
 		trafficlight.LightDetection(Image, lightImage);
-		
+
 		trafficlight.ClosingOperation(lightImage);
 		vector<Point> pointLight;
 		pointLight = trafficlight.LightBoundingBox(lightImage);
-		trafficlight.BoundingBoxShow(Image, pointLight);
+	//	trafficlight.BoundingBoxShow(Image, pointLight);
 		trafficlight.LightExtract(Image, pointLight, &startID);
 
 		end = clock();
 		float TimeSpend = (double)(end - start) / CLOCKS_PER_SEC;
 		float frequency = 1/TimeSpend;
-		printf("FrameNum: %d, HZ is %f\n", frameNum, frequency); 
+		printf("FrameNum: %d, HZ is %f\n", frameNum, frequency);
 		//frameLoad.showFrame("redImage", redImage);
 		//frameLoad.showFrame("greenImage", greenImage);
 		//frameLoad.showFrame("lightImage", lightImage);
-			
+//    usleep(200*1000);
 		//frameLoad.show(20);
 	}
 	fo << startID;
 	fo.close();
 }
+
+

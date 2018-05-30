@@ -1,5 +1,31 @@
 #include "trafficLight.hpp"
 
+TrafficLight::TrafficLight(){
+    RedLight = imread("/home/yongchao/TrafficLightDetection/src/Red.png");
+    GreenLight = imread("/home/yongchao/TrafficLightDetection/src/Green.png");
+    NullLight = imread("/home/yongchao/TrafficLightDetection/src/NULL.png");
+
+
+    LightHeight = 50;
+    LightWidth = 50;
+
+    resize(RedLight, RedLight, Size(LightHeight,LightWidth));
+    resize(GreenLight, GreenLight, Size(LightHeight,LightWidth));
+    resize(NullLight, NullLight, Size(LightHeight,LightWidth));
+
+    cvtColor(RedLight, RedMask, CV_BGR2GRAY);
+    cvtColor(GreenLight, GreenMask, CV_BGR2GRAY);
+    cvtColor(NullLight, NullMask, CV_BGR2GRAY);
+    if(0){
+        namedWindow("RedLight");
+        imshow("RedLight", RedLight);
+        namedWindow("GreenLight");
+        imshow("GreenLight", GreenLight);
+        namedWindow("NullLight");
+        imshow("NullLight", NullLight);
+        waitKey(100);
+    }
+}
 
 void TrafficLight::LightDetection(const Mat &originImage, Mat &redImage, Mat &greenImage){
 	Mat imgYCrCb;
@@ -20,7 +46,7 @@ void TrafficLight::LightDetection(const Mat &originImage, Mat &redImage, Mat &gr
 	for (; it_Cr != it_Cr_end; ++it_Cr, ++it_Red, ++it_Green)
 	{
 		float cr = float(*it_Cr) * gain_red_a + gain_red_b;
-		// RED, 145<Cr<470 
+		// RED, 145<Cr<470
 		if (cr > thresh_red_min && cr < thresh_red_max)
 			*it_Red = 255;
 		else
@@ -59,8 +85,8 @@ void TrafficLight::LightDetection(const Mat &originImage, Mat &LightImage){
 
 
 void TrafficLight::ClosingOperation(Mat &LightImage){
-	Mat element_erode = getStructuringElement(MORPH_RECT, Size(1, 1));
-	Mat element_dilate = getStructuringElement(MORPH_RECT, Size(8, 8));
+	Mat element_erode = getStructuringElement(MORPH_RECT, Size(2, 2));
+	Mat element_dilate = getStructuringElement(MORPH_RECT, Size(20, 20));
 	erode(LightImage, LightImage, element_erode);
 	dilate(LightImage, LightImage, element_dilate);
 }
@@ -88,11 +114,11 @@ vector<Point> TrafficLight::LightBoundingBox(const Mat &LightImage){
 void TrafficLight::BoundingBoxShow(const Mat &LightImage, vector<Point> circlePoint){
 	Mat ImageShow;
 	LightImage.copyTo(ImageShow);
-	
+
 	for(int i = 0; i < circlePoint.size(); ++i){
 		Point pt1 = Point(circlePoint[i].x - WIDTH_DRAW/2, circlePoint[i].y - HEIGHT_DRAW/2);
 		Point pt2 = Point(circlePoint[i].x + WIDTH_DRAW/2, circlePoint[i].y + HEIGHT_DRAW/2);
-		rectangle(ImageShow, pt1, pt2, Scalar(255,255,255), 4); 
+		rectangle(ImageShow, pt1, pt2, Scalar(255,255,255), 4);
 	}
 
 	namedWindow("Bounding Box Show", CV_WINDOW_AUTOSIZE);
@@ -100,8 +126,9 @@ void TrafficLight::BoundingBoxShow(const Mat &LightImage, vector<Point> circlePo
 	waitKey(50);
 }
 
-void TrafficLight::LightExtract(const Mat &LightImage, vector<Point> circlePoint, int* ID){
-	Mat Image;
+vector<string> TrafficLight::LightExtract(const Mat &LightImage, vector<Point> circlePoint, int* ID){
+	vector<string> ImagePath;
+    Mat Image;
 	LightImage.copyTo(Image);
 	int row = Image.rows;
 	int col = Image.cols;
@@ -109,13 +136,63 @@ void TrafficLight::LightExtract(const Mat &LightImage, vector<Point> circlePoint
 		if(circlePoint[i].x - WIDTH_DRAW/2 >= 0 && circlePoint[i].y - HEIGHT_DRAW/2 >= 0 && circlePoint[i].x + WIDTH_DRAW/2 < col && circlePoint[i].y + HEIGHT_DRAW/2 < row )
 		{
 		(*ID) ++;
-		printf("ID:%d, circlePoint[%d].x: %d, circlePoint[%d].y: %d\n",*ID, i, circlePoint[i].x, i, circlePoint[i].y);
+		//printf("ID:%d, circlePoint[%d].x: %d, circlePoint[%d].y: %d\n",*ID, i, circlePoint[i].x, i, circlePoint[i].y);
 		Rect Rec = Rect(circlePoint[i].x - WIDTH_DRAW/2, circlePoint[i].y - HEIGHT_DRAW/2, WIDTH_DRAW, HEIGHT_DRAW);
 		Mat Roi = Image(Rec);
-		char savepath[128] = "../../ROI/";
+		char savepath[128] = "/home/yongchao/TrafficLightDetection/ROI/";
 		sprintf(savepath, "%s%08d.jpg", savepath, (*ID));
 		//printf("SavePath is %s\n", savepath);
 		imwrite(savepath, Roi);
+        ImagePath.push_back(savepath);
 		}
 	}
+    return ImagePath;
+}
+
+vector<int> TrafficLight::DetectionMsgAnlysis(const vector<Point> circlePoint, const vector<int> msg){
+
+}
+
+void TrafficLight::DetectionLightShow(const Mat &LightImage, const vector<int> msg){
+    int msgLength = msg.size();
+    Mat Image;
+    LightImage.copyTo(Image);
+    for(int i=0; i < msgLength; i++){
+        if(msg[i] == 0){
+            Mat imageROI = Image(Rect(400, 0, LightHeight, LightWidth));
+            GreenLight.copyTo(imageROI, GreenMask);
+        }
+        else if(msg[i] == 1){
+            Mat imageROI = Image(Rect(400, 0, LightHeight, LightWidth));
+            RedLight.copyTo(imageROI, RedMask);
+        }
+        else if(msg[i] == 2){
+            Mat imageROI = Image(Rect(400, 0, LightHeight, LightWidth));
+            GreenLight.copyTo(imageROI, GreenMask);
+        }
+        else if(msg[i] == 3){
+            Mat imageROI = Image(Rect(400, 0, LightHeight, LightWidth));
+            RedLight.copyTo(imageROI, RedMask);
+        }
+        else if(msg[i] == 4){
+            Mat imageROI = Image(Rect(0, 0, LightHeight, LightWidth));
+            GreenLight.copyTo(imageROI, GreenMask);
+        }
+        else if(msg[i] == 5){
+            Mat imageROI = Image(Rect(0, 0, LightHeight, LightWidth));
+            RedLight.copyTo(imageROI, RedMask);
+        }
+        else if(msg[i] == 7){
+            Mat imageROI = Image(Rect(800, 0, LightHeight, LightWidth));
+            GreenLight.copyTo(imageROI, GreenMask);
+        }
+        else if(msg[i] == 8){
+            Mat imageROI = Image(Rect(800, 0, LightHeight, LightWidth));
+            RedLight.copyTo(imageROI, RedMask);
+        }
+    }
+    namedWindow("Results");
+    imshow("Results", Image);
+    waitKey(20);
+
 }

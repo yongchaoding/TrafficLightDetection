@@ -79,7 +79,7 @@ Mat FrameLoad::getFrame(){
 	else{
 		perror("LOADMODE ERROR!\n");
 	}
-	resize(frame, frame, Size(), 0.3, 0.3);
+    //resize(frame, frame, Size(), 0.3, 0.3);
 	return frame;
 }
 
