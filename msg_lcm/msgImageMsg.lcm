@@ -1,0 +1,8 @@
+package exlcm;
+
+struct msgImageMsg
+{
+    int64_t timestamp;
+    int32_t ImageNum;
+    int32_t ImageMsg[ImageNum];
+}
