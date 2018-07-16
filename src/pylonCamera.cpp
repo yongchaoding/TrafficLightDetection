@@ -25,10 +25,10 @@ pyloncamera::pyloncamera(){
 
 }
 pyloncamera::~pyloncamera(){
-	
+
 }
 int pyloncamera::cameraInit(){
-	
+
 }
 Mat pyloncamera::getCameraImg(){
 	Mat openCvImage;
@@ -46,4 +46,8 @@ Mat pyloncamera::getCameraImg(){
 		}
 	}
 	return openCvImage;
+}
+
+int pyloncamera::saveCameraImg(){
+
 }

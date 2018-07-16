@@ -18,6 +18,7 @@ public:
 	~pyloncamera();
 	int cameraInit();
 	Mat getCameraImg();
+	int saveCameraImg();
 private:
 	PylonAutoInitTerm autoInitTerm;
 	CInstantCamera camera(CTlFactory::GetInstance().CreateFirstDevice());
