@@ -18,7 +18,8 @@ include_directories(${PROJECT_SOURCE_DIR}/..)
 
 add_executable(trafficLightDetection
     #trafficLightDetection.cpp
-    lightSaver.cpp
+    #lightSaver.cpp
+    pylonCameraTest.cpp
     trafficLight.cpp
 	FrameLoad.cpp
     receiver.cpp
