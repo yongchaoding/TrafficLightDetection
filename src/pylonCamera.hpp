@@ -17,18 +17,18 @@ public:
 	pyloncamera();
 	~pyloncamera();
 	int cameraInit();
-	Mat getCameraImg();
+	Mat getCameraImg(int initFlag = 0);
 	int saveCameraImg();
 private:
 	PylonAutoInitTerm autoInitTerm;
 	//CInstantCamera camera(CT1Factory::GetInstance().CreateFirstDevice());
-	CInstantCamera camera;
+	//CInstantCamera camera;
 	CImageFormatConverter formatConverter;
 	CPylonImage pylonImage;
 	VideoWriter cvVideoCreator;
 	int grabbedlmages = 0;
 	string videoFileName;
-	static const uint32_t c_countOfImagesToGrab = 10;
+	static const uint32_t c_countOfImagesToGrab = 100;
 	CGrabResultPtr ptrGrabResult;
 };
 

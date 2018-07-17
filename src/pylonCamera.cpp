@@ -3,7 +3,23 @@
 //CInstantCamera camera(CTlFactory::GetInstance().CreateFirstDevice());
 
 pyloncamera::pyloncamera(){
-    videoFileName = "openCvVideo.avi";
+    	PylonInitialize();
+	videoFileName = "openCvVideo.avi";
+}
+
+pyloncamera::~pyloncamera(){
+
+}
+
+int pyloncamera::cameraInit(){
+	getCameraImg(1);
+}
+
+Mat pyloncamera::getCameraImg(int initFlag){
+	Mat openCvImage;
+static CInstantCamera camera(CTlFactory::GetInstance().CreateFirstDevice());
+	if(initFlag){
+
 
     std::cout << "Using device " << camera.GetDeviceInfo().GetModelName() << endl;
     GenApi::INodeMap& nodemap = camera.GetNodeMap();
@@ -23,32 +39,30 @@ pyloncamera::pyloncamera(){
     cvVideoCreator.open(videoFileName, CV_FOURCC('D', 'I', 'V','X'), 10, frameSize, true);
     // 开始抓取c_countOfImagesToGrab images.
     //相机默认设置连续抓取模式
+    //camera.StartGrabbing(c_countOfImagesToGrab);
     camera.StartGrabbing(c_countOfImagesToGrab, GrabStrategy_LatestImageOnly);
-
+	return openCvImage;
 }
-
-pyloncamera::~pyloncamera(){
-
-}
-
-int pyloncamera::cameraInit(){
-
-}
-
-Mat pyloncamera::getCameraImg(){
-	Mat openCvImage;
+		
+//	cout << "Checking Grab Status 1" << endl;
 	if(camera.IsGrabbing()){
 		// 等待接收和恢复图像，超时时间设置为5000 ms.
-        camera.RetrieveResult(5000, ptrGrabResult, TimeoutHandling_ThrowException);
+        	camera.RetrieveResult(5000, ptrGrabResult, TimeoutHandling_ThrowException);
+//		cout << "Checking Grab Status 2" << endl;
 		if(ptrGrabResult->GrabSucceeded()){
 			// 获取图像数据
-            cout <<"SizeX: "<<ptrGrabResult->GetWidth()<<endl;
-            cout <<"SizeY: "<<ptrGrabResult->GetHeight()<<endl;
-            //将抓取的缓冲数据转化成pylon image.
+            //cout <<"SizeX: "<<ptrGrabResult->GetWidth()<<endl;
+            //cout <<"SizeY: "<<ptrGrabResult->GetHeight()<<endl;
+            
+	    //将抓取的缓冲数据转化成pylon image.
             formatConverter.Convert(pylonImage, ptrGrabResult);
             // 将 pylon image转成OpenCV image.
             openCvImage = cv::Mat(ptrGrabResult->GetHeight(), ptrGrabResult->GetWidth(), CV_8UC3, (uint8_t *) pylonImage.GetBuffer());
 		}
+	}
+	else{
+
+    camera.StartGrabbing(c_countOfImagesToGrab, GrabStrategy_LatestImageOnly);
 	}
 	return openCvImage;
 }
