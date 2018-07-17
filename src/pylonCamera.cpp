@@ -1,10 +1,12 @@
-#include "pyloncamera.hpp"
+#include "pylonCamera.hpp"
+
+//CInstantCamera camera(CTlFactory::GetInstance().CreateFirstDevice());
 
 pyloncamera::pyloncamera(){
-	videoFileName = "openCvVideo.avi";
+    videoFileName = "openCvVideo.avi";
 
-	std::cout << "Using device " << camera.GetDeviceInfo().GetModelName() << endl;
-	GenApi::INodeMap& nodemap = camera.GetNodeMap();
+    std::cout << "Using device " << camera.GetDeviceInfo().GetModelName() << endl;
+    GenApi::INodeMap& nodemap = camera.GetNodeMap();
     //打开相机
     camera.Open();
     //获取相机成像宽度和高度
@@ -24,12 +26,15 @@ pyloncamera::pyloncamera(){
     camera.StartGrabbing(c_countOfImagesToGrab, GrabStrategy_LatestImageOnly);
 
 }
+
 pyloncamera::~pyloncamera(){
 
 }
+
 int pyloncamera::cameraInit(){
 
 }
+
 Mat pyloncamera::getCameraImg(){
 	Mat openCvImage;
 	if(camera.IsGrabbing()){
@@ -51,3 +56,4 @@ Mat pyloncamera::getCameraImg(){
 int pyloncamera::saveCameraImg(){
 
 }
+

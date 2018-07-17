@@ -5,7 +5,7 @@
 #include <pylon/PylonIncludes.h>
 
 #include <opencv2/highgui.hpp>
-#include <opencv2/opencv2.hpp>
+//#include <opencv2/opencv2.hpp>
 #include <opencv2/core.hpp>
 
 using namespace Pylon;
@@ -21,7 +21,8 @@ public:
 	int saveCameraImg();
 private:
 	PylonAutoInitTerm autoInitTerm;
-	CInstantCamera camera(CTlFactory::GetInstance().CreateFirstDevice());
+	//CInstantCamera camera(CT1Factory::GetInstance().CreateFirstDevice());
+	CInstantCamera camera;
 	CImageFormatConverter formatConverter;
 	CPylonImage pylonImage;
 	VideoWriter cvVideoCreator;
@@ -29,6 +30,6 @@ private:
 	string videoFileName;
 	static const uint32_t c_countOfImagesToGrab = 10;
 	CGrabResultPtr ptrGrabResult;
-}
+};
 
 #endif
